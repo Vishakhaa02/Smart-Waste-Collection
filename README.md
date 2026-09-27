@@ -6,6 +6,8 @@ manage every request from one dashboard.
 
 Built for **FITFEST2026 / GDG FIT Pune Hackathon 2026** (solo, software-only, ~4 hour MVP).
 
+Website is Live at : https://smart-waste-collection-26jj.onrender.com/
+
 ---
 
 ## Problem
