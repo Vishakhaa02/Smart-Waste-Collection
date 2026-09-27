@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Admin login — CircuitBin{% endblock %}
+{% block content %}
+<section class="login-section">
+  <h1>Admin login</h1>
+  <form method="post" class="login-form">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required autofocus>
+    <button type="submit" class="btn-primary">Log in</button>
+  </form>
+</section>
+{% endblock %}

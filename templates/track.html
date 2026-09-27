@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Track request — CircuitBin{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <h1>Track your pickup</h1>
+  <p class="page-sub">Enter the tracking code you received when you submitted your request.</p>
+</div>
+
+<form method="post" class="track-form">
+  <input type="text" name="code" placeholder="e.g. WC-7F3K9A" required value="{{ code }}">
+  <button type="submit" class="btn-primary">Check status</button>
+</form>
+
+{% if searched %}
+  {% if result %}
+  <div class="status-card status-{{ result.status|lower }}">
+    <div class="status-top">
+      <span class="tracking-code small">{{ result.tracking_code }}</span>
+      <span class="status-pill status-pill-{{ result.status|lower }}">{{ result.status }}</span>
+    </div>
+    <dl class="status-details">
+      <dt>Category</dt><dd>{{ categories[result.category].icon }} {{ categories[result.category].label }}</dd>
+      <dt>Address</dt><dd>{{ result.address }}{% if result.landmark %}, near {{ result.landmark }}{% endif %}</dd>
+      <dt>Preferred date</dt><dd>{{ result.preferred_date }}</dd>
+      <dt>Submitted</dt><dd>{{ result.created_at }}</dd>
+      <dt>Last updated</dt><dd>{{ result.updated_at }}</dd>
+      {% if result.notes %}<dt>Notes</dt><dd>{{ result.notes }}</dd>{% endif %}
+    </dl>
+  </div>
+
+  {% if history %}
+  <div class="timeline">
+    <h3>Status timeline</h3>
+    <ol class="timeline-list">
+      {% for h in history %}
+      <li>
+        <span class="timeline-dot"></span>
+        <div class="timeline-body">
+          <span class="status-pill status-pill-{{ h.status|lower }}">{{ h.status }}</span>
+          <span class="timeline-time">{{ h.changed_at }}</span>
+          {% if h.note %}<p class="timeline-note">{{ h.note }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  {% if result.status == 'Collected' %}
+    {% if existing_feedback %}
+    <div class="feedback-thanks">
+      <h3>Your feedback</h3>
+      <div class="feedback-stars">{{ '★' * existing_feedback.rating }}{{ '☆' * (5 - existing_feedback.rating) }}</div>
+      {% if existing_feedback.comment %}<p>"{{ existing_feedback.comment }}"</p>{% endif %}
+    </div>
+    {% else %}
+    <div class="feedback-form-card">
+      <h3>How did this pickup go?</h3>
+      <form method="post" action="{{ url_for('submit_feedback', code=result.tracking_code) }}" class="feedback-form">
+        <div class="star-select">
+          {% for i in range(1,6) %}
+          <label><input type="radio" name="rating" value="{{ i }}" {% if i == 5 %}checked{% endif %}> {{ i }}★</label>
+          {% endfor %}
+        </div>
+        <textarea name="comment" placeholder="Optional comment"></textarea>
+        <button type="submit" class="btn-secondary">Submit feedback</button>
+      </form>
+    </div>
+    {% endif %}
+  {% endif %}
+
+  {% else %}
+  <p class="empty-state">No request found with that tracking code. Double-check it and try again, or look it up on the <a href="{{ url_for('my_requests') }}">My requests</a> page using your phone number.</p>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

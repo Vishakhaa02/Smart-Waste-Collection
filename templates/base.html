@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}CircuitBin — Waste Collection{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{{ url_for('landing') }}">
+    <span class="brand-mark">CB</span>
+    <span class="brand-name">CircuitBin</span>
+  </a>
+  <nav class="site-nav">
+    <a href="{{ url_for('request_form') }}">Request pickup</a>
+    <a href="{{ url_for('track') }}">Track</a>
+    <a href="{{ url_for('my_requests') }}">My requests</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('faq') }}">FAQ</a>
+    {% if session.get('is_admin') %}
+      <a href="{{ url_for('admin_overview') }}" class="nav-cta">Dashboard</a>
+      <a href="{{ url_for('admin_logout') }}">Log out</a>
+    {% else %}
+      <a href="{{ url_for('admin_login') }}">Admin</a>
+    {% endif %}
+  </nav>
+</header>
+
+{% if active_announcements %}
+<div class="announce-bar">
+  {% for a in active_announcements %}
+  <div class="announce-item">📢 {{ a.message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main class="site-main">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="footer-col">
+    <div class="footer-brand">CircuitBin</div>
+    <p>Organized pickups, cleaner streets.</p>
+  </div>
+  <div class="footer-col">
+    <div class="footer-heading">Platform</div>
+    <a href="{{ url_for('request_form') }}">Request pickup</a>
+    <a href="{{ url_for('track') }}">Track request</a>
+    <a href="{{ url_for('my_requests') }}">My requests</a>
+  </div>
+  <div class="footer-col">
+    <div class="footer-heading">Learn more</div>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('faq') }}">FAQ</a>
+    <a href="{{ url_for('admin_login') }}">Admin login</a>
+  </div>
+  <div class="footer-bottom">© {{ current_year }} CircuitBin</div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

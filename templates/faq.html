@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}FAQ — CircuitBin{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <h1>Frequently asked questions</h1>
+  <p class="page-sub">Can't find what you're looking for? The category guide on the request page covers most edge cases too.</p>
+</div>
+
+<div class="faq-list">
+  {% for q, a in faqs %}
+  <details class="faq-item">
+    <summary>{{ q }}</summary>
+    <p>{{ a }}</p>
+  </details>
+  {% endfor %}
+</div>
+
+{% endblock %}

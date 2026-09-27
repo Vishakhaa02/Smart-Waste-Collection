@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Request submitted — CircuitBin{% endblock %}
+{% block content %}
+<section class="confirm-card">
+  <span class="confirm-icon">✅</span>
+  <h1>Request submitted</h1>
+  <p>Keep this tracking code to check your pickup status any time.</p>
+  <div class="tracking-code">{{ code }}</div>
+  <div class="confirm-actions">
+    <a class="btn-primary" href="{{ url_for('track', code=code) }}">Track this request</a>
+    <a class="btn-secondary" href="{{ url_for('request_form') }}">Submit another</a>
+  </div>
+  <p class="confirm-note">You can also find this request any time from the <a href="{{ url_for('my_requests') }}">My requests</a> page using your phone number.</p>
+</section>
+{% endblock %}

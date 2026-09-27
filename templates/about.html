@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}About — CircuitBin{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <h1>About CircuitBin</h1>
+  <p class="page-sub">A small platform built to make waste collection easier to request, track, and manage.</p>
+</div>
+
+<section class="about-block">
+  <h2>The problem</h2>
+  <p>Many residents aren't sure how to sort or dispose of different kinds of waste, and don't have a
+  straightforward way to request a pickup. On the other side, collection teams often coordinate
+  requests informally — over calls or messages — with no shared record of what's pending, scheduled,
+  or completed.</p>
+</section>
+
+<section class="about-block">
+  <h2>The solution</h2>
+  <p>CircuitBin gives residents a short form to describe their waste and pickup details, guided by a
+  plain-language category guide, and a tracking code so they can check status without calling anyone.
+  Collection staff get a dashboard to search, filter, and update every request, see collection
+  statistics at a glance, export data, and post announcements when schedules change.</p>
+</section>
+
+<section class="about-block">
+  <h2>Platform activity</h2>
+  <div class="about-stats">
+    <div class="about-stat"><span class="about-stat-num">{{ stats.total }}</span><span>Total requests</span></div>
+    <div class="about-stat"><span class="about-stat-num">{{ stats.scheduled }}</span><span>Scheduled</span></div>
+    <div class="about-stat"><span class="about-stat-num">{{ stats.collected }}</span><span>Collected</span></div>
+    <div class="about-stat"><span class="about-stat-num">{{ stats.pending }}</span><span>Pending</span></div>
+  </div>
+</section>
+
+<section class="about-block">
+  <h2>Built for</h2>
+  <p>FITFEST2026, GDG FIT Pune's hackathon at Flora Institute of Technology — designed and built solo
+  as a functional MVP within the event's development window.</p>
+</section>
+
+{% endblock %}

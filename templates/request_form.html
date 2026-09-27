@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Request a pickup — CircuitBin{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <h1>Request a pickup</h1>
+  <p class="page-sub">Fill in your details below. You'll get a tracking code as soon as you submit.</p>
+</div>
+
+<div class="form-layout">
+  <form method="post" action="{{ url_for('submit_request') }}" class="request-form">
+    <div class="form-row">
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" required placeholder="e.g. Aditi Sharma">
+    </div>
+    <div class="form-row">
+      <label for="phone">Phone number</label>
+      <input type="tel" id="phone" name="phone" required placeholder="e.g. 98765 43210">
+    </div>
+    <div class="form-row">
+      <label for="category">Waste category</label>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>Select a category</option>
+        {% for key, cat in categories.items() %}
+        <option value="{{ key }}">{{ cat.icon }} {{ cat.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="address">Pickup address</label>
+      <textarea id="address" name="address" required placeholder="House / flat, street, area"></textarea>
+    </div>
+    <div class="form-row">
+      <label for="landmark">Landmark <span class="optional">(optional)</span></label>
+      <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark">
+    </div>
+    <div class="form-row">
+      <label for="preferred_date">Preferred pickup date</label>
+      <input type="date" id="preferred_date" name="preferred_date" required min="{{ today }}">
+    </div>
+    <div class="form-row">
+      <label for="notes">Notes <span class="optional">(optional)</span></label>
+      <textarea id="notes" name="notes" placeholder="Quantity, access instructions, anything the crew should know"></textarea>
+    </div>
+    <button type="submit" class="btn-primary">Submit request</button>
+  </form>
+
+  <aside class="form-aside">
+    <h3>Category quick guide</h3>
+    <ul class="aside-list">
+      {% for key, cat in categories.items() %}
+      <li><span>{{ cat.icon }}</span> {{ cat.label }}</li>
+      {% endfor %}
+    </ul>
+    <p class="aside-note">Not sure? Choose the closest match and add a note — the collection team will confirm with you if needed.</p>
+    <a href="{{ url_for('faq') }}" class="aside-link">Read the FAQ →</a>
+  </aside>
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "admin/layout.html" %}
+{% block title %}Announcements — CircuitBin Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <h1>Announcements</h1>
+</div>
+<p class="page-sub">Active announcements appear as a banner on every page for site visitors.</p>
+
+<form method="post" class="announce-form">
+  <textarea name="message" placeholder="e.g. No collection on public holidays this week." required></textarea>
+  <button type="submit" class="btn-primary">Post announcement</button>
+</form>
+
+{% if announcements %}
+<div class="announce-manage-list">
+  {% for a in announcements %}
+  <div class="announce-manage-item {{ 'inactive' if not a.active }}">
+    <p>{{ a.message }}</p>
+    <div class="announce-manage-meta">
+      <span class="muted">{{ a.created_at }} · {{ 'Active' if a.active else 'Hidden' }}</span>
+      <div class="announce-actions">
+        <form method="post" action="{{ url_for('admin_toggle_announcement', ann_id=a.id) }}">
+          <button type="submit" class="btn-tiny">{{ 'Hide' if a.active else 'Show' }}</button>
+        </form>
+        <form method="post" action="{{ url_for('admin_delete_announcement', ann_id=a.id) }}" onsubmit="return confirm('Delete this announcement?');">
+          <button type="submit" class="btn-tiny btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">No announcements yet.</p>
+{% endif %}
+
+{% endblock %}

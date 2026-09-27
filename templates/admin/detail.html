@@ -1,0 +1,66 @@
+{% extends "admin/layout.html" %}
+{% block title %}{{ r.tracking_code }} — CircuitBin Admin{% endblock %}
+{% block admin_content %}
+
+<a href="{{ url_for('admin_requests') }}" class="btn-link">← Back to requests</a>
+
+<div class="admin-header">
+  <h1>{{ r.tracking_code }}</h1>
+  <span class="status-pill status-pill-{{ r.status|lower }}">{{ r.status }}</span>
+</div>
+
+<div class="detail-grid">
+  <div class="detail-main">
+    <dl class="status-details">
+      <dt>Name</dt><dd>{{ r.name }}</dd>
+      <dt>Phone</dt><dd>{{ r.phone }}</dd>
+      <dt>Category</dt><dd>{{ categories[r.category].icon }} {{ categories[r.category].label }}</dd>
+      <dt>Address</dt><dd>{{ r.address }}{% if r.landmark %}, near {{ r.landmark }}{% endif %}</dd>
+      <dt>Preferred date</dt><dd>{{ r.preferred_date }}</dd>
+      <dt>Notes</dt><dd>{{ r.notes or '—' }}</dd>
+      <dt>Submitted</dt><dd>{{ r.created_at }}</dd>
+      <dt>Last updated</dt><dd>{{ r.updated_at }}</dd>
+    </dl>
+
+    {% if feedback %}
+    <div class="feedback-thanks">
+      <h3>Feedback</h3>
+      <div class="feedback-stars">{{ '★' * feedback.rating }}{{ '☆' * (5 - feedback.rating) }}</div>
+      {% if feedback.comment %}<p>"{{ feedback.comment }}"</p>{% endif %}
+    </div>
+    {% endif %}
+
+    {% if history %}
+    <div class="timeline">
+      <h3>Status timeline</h3>
+      <ol class="timeline-list">
+        {% for h in history %}
+        <li>
+          <span class="timeline-dot"></span>
+          <div class="timeline-body">
+            <span class="status-pill status-pill-{{ h.status|lower }}">{{ h.status }}</span>
+            <span class="timeline-time">{{ h.changed_at }}</span>
+            {% if h.note %}<p class="timeline-note">{{ h.note }}</p>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
+  </div>
+
+  <aside class="detail-side">
+    <h3>Update status</h3>
+    <form method="post" action="{{ url_for('admin_update_status', req_id=r.id) }}" class="update-form">
+      <select name="status">
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if r.status == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+      <textarea name="note" placeholder="Optional note (visible in the timeline)"></textarea>
+      <button type="submit" class="btn-primary">Save</button>
+    </form>
+  </aside>
+</div>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Request a pickup — CircuitBin{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-kicker">Not sure which bin it belongs in?</p>
+    <h1>Sort it right, then have it collected.</h1>
+    <p class="hero-sub">Pick the category that matches your waste, tell us where and when, and track the pickup from request to collection — no phone calls needed.</p>
+  </div>
+  <div class="hero-stamp">♻</div>
+</section>
+
+<section class="guide">
+  <h2>Choose the right category</h2>
+  <div class="guide-grid">
+    {% for key, cat in categories.items() %}
+    <div class="guide-card">
+      <span class="guide-icon">{{ cat.icon }}</span>
+      <h3>{{ cat.label }}</h3>
+      <p>{{ cat.guide }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="form-section">
+  <h2>Submit a pickup request</h2>
+  <form method="post" action="{{ url_for('submit_request') }}" class="request-form">
+    <div class="form-row">
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" required placeholder="e.g. Aditi Sharma">
+    </div>
+    <div class="form-row">
+      <label for="phone">Phone number</label>
+      <input type="tel" id="phone" name="phone" required placeholder="e.g. 98765 43210">
+    </div>
+    <div class="form-row">
+      <label for="category">Waste category</label>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>Select a category</option>
+        {% for key, cat in categories.items() %}
+        <option value="{{ key }}">{{ cat.icon }} {{ cat.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="address">Pickup address</label>
+      <textarea id="address" name="address" required placeholder="House / flat, street, area"></textarea>
+    </div>
+    <div class="form-row">
+      <label for="landmark">Landmark <span class="optional">(optional)</span></label>
+      <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark">
+    </div>
+    <div class="form-row">
+      <label for="preferred_date">Preferred pickup date</label>
+      <input type="date" id="preferred_date" name="preferred_date" required min="{{ today }}">
+    </div>
+    <div class="form-row">
+      <label for="notes">Notes <span class="optional">(optional)</span></label>
+      <textarea id="notes" name="notes" placeholder="Quantity, access instructions, anything the crew should know"></textarea>
+    </div>
+    <button type="submit" class="btn-primary">Submit request</button>
+  </form>
+</section>
+
+{% endblock %}

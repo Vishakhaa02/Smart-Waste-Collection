@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — CircuitBin{% endblock %}
+{% block content %}
+
+<section class="dash-stats">
+  <div class="stat-card"><span class="stat-num">{{ stats.total }}</span><span class="stat-label">Total requests</span></div>
+  <div class="stat-card stat-pending"><span class="stat-num">{{ stats.pending }}</span><span class="stat-label">Pending</span></div>
+  <div class="stat-card stat-scheduled"><span class="stat-num">{{ stats.scheduled }}</span><span class="stat-label">Scheduled</span></div>
+  <div class="stat-card stat-collected"><span class="stat-num">{{ stats.collected }}</span><span class="stat-label">Collected</span></div>
+  <div class="stat-card stat-cancelled"><span class="stat-num">{{ stats.cancelled }}</span><span class="stat-label">Cancelled</span></div>
+</section>
+
+<section class="dash-breakdown">
+  <h2>By category</h2>
+  <div class="breakdown-bars">
+    {% for key, cat in categories.items() %}
+    {% set count = category_counts.get(key, 0) %}
+    <div class="breakdown-row">
+      <span class="breakdown-label">{{ cat.icon }} {{ cat.label }}</span>
+      <div class="breakdown-track">
+        <div class="breakdown-fill" style="width: {{ (count / stats.total * 100) if stats.total else 0 }}%"></div>
+      </div>
+      <span class="breakdown-count">{{ count }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="dash-table-section">
+  <div class="dash-table-header">
+    <h2>Pickup requests</h2>
+    <form method="get" class="filter-bar">
+      <input type="text" name="q" placeholder="Search name, phone or code" value="{{ search }}">
+      <select name="status">
+        <option value="">All statuses</option>
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if status_filter == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+      <select name="category">
+        <option value="">All categories</option>
+        {% for key, cat in categories.items() %}
+        <option value="{{ key }}" {% if category_filter == key %}selected{% endif %}>{{ cat.label }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn-secondary">Filter</button>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn-link">Clear</a>
+    </form>
+  </div>
+
+  <div class="table-wrap">
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Code</th><th>Name</th><th>Phone</th><th>Category</th><th>Address</th>
+          <th>Preferred date</th><th>Status</th><th>Submitted</th><th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td class="mono">{{ r.tracking_code }}</td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.phone }}</td>
+          <td>{{ categories[r.category].icon }} {{ categories[r.category].label }}</td>
+          <td>{{ r.address }}{% if r.landmark %}<br><span class="muted">near {{ r.landmark }}</span>{% endif %}</td>
+          <td>{{ r.preferred_date }}</td>
+          <td><span class="status-pill status-pill-{{ r.status|lower }}">{{ r.status }}</span></td>
+          <td class="muted">{{ r.created_at }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin_update_status', req_id=r.id) }}" class="inline-form">
+              <select name="status">
+                {% for s in statuses %}
+                <option value="{{ s }}" {% if r.status == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn-tiny">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" class="empty-state">No requests match these filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}My requests — CircuitBin{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <h1>My requests</h1>
+  <p class="page-sub">Search by the phone number you used when submitting a request to see all of them at once.</p>
+</div>
+
+<form method="post" class="track-form">
+  <input type="tel" name="phone" placeholder="e.g. 98765 43210" required value="{{ phone }}">
+  <button type="submit" class="btn-primary">Find requests</button>
+</form>
+
+{% if searched %}
+  {% if results %}
+  <div class="mini-cards">
+    {% for r in results %}
+    <a class="mini-card" href="{{ url_for('track', code=r.tracking_code) }}">
+      <div class="mini-card-top">
+        <span class="tracking-code small">{{ r.tracking_code }}</span>
+        <span class="status-pill status-pill-{{ r.status|lower }}">{{ r.status }}</span>
+      </div>
+      <p class="mini-card-cat">{{ categories[r.category].icon }} {{ categories[r.category].label }}</p>
+      <p class="mini-card-addr">{{ r.address }}</p>
+      <span class="mini-card-date">Preferred: {{ r.preferred_date }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="empty-state">No requests found for that phone number.</p>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

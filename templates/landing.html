@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}CircuitBin — Smart Waste Collection{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-kicker">Not sure which bin it belongs in?</p>
+    <h1>Sort it right, then have it collected.</h1>
+    <p class="hero-sub">Pick the category that matches your waste, tell us where and when, and track the pickup from request to collection — no phone calls needed.</p>
+    <div class="hero-actions">
+      <a href="{{ url_for('request_form') }}" class="btn-primary">Request a pickup</a>
+      <a href="{{ url_for('track') }}" class="btn-secondary">Track a request</a>
+    </div>
+  </div>
+  <div class="hero-stamp">♻</div>
+</section>
+
+<section class="impact-bar">
+  <div class="impact-item"><span class="impact-num">{{ stats.total }}</span><span class="impact-label">Requests handled</span></div>
+  <div class="impact-item"><span class="impact-num">{{ stats.collected }}</span><span class="impact-label">Collected</span></div>
+  <div class="impact-item"><span class="impact-num">{{ categories|length }}</span><span class="impact-label">Waste categories</span></div>
+  <div class="impact-item">
+    <span class="impact-num">{% if avg_rating %}{{ avg_rating }}★{% else %}—{% endif %}</span>
+    <span class="impact-label">{% if rating_count %}from {{ rating_count }} rating{{ 's' if rating_count != 1 }}{% else %}No ratings yet{% endif %}</span>
+  </div>
+</section>
+
+<section class="how-it-works">
+  <h2>How it works</h2>
+  <div class="steps-row">
+    <div class="step-card">
+      <span class="step-num">1</span>
+      <h3>Choose a category</h3>
+      <p>Match your waste to one of six categories using the guide below.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-num">2</span>
+      <h3>Submit pickup details</h3>
+      <p>Share your address and a preferred date — it takes under a minute.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-num">3</span>
+      <h3>Track and confirm</h3>
+      <p>Follow the status with your tracking code until it's collected.</p>
+    </div>
+  </div>
+</section>
+
+<section class="guide">
+  <h2>Choose the right category</h2>
+  <div class="guide-grid">
+    {% for key, cat in categories.items() %}
+    <div class="guide-card">
+      <span class="guide-icon">{{ cat.icon }}</span>
+      <h3>{{ cat.label }}</h3>
+      <p>{{ cat.guide }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if recent_feedback %}
+<section class="feedback-highlights">
+  <h2>What people are saying</h2>
+  <div class="feedback-grid">
+    {% for f in recent_feedback %}
+    <div class="feedback-card">
+      <div class="feedback-stars">{{ '★' * f.rating }}{{ '☆' * (5 - f.rating) }}</div>
+      <p>"{{ f.comment }}"</p>
+      <span class="feedback-meta">{{ categories[f.category].icon }} {{ categories[f.category].label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="cta-band">
+  <h2>Ready to schedule a pickup?</h2>
+  <a href="{{ url_for('request_form') }}" class="btn-primary">Request a pickup now</a>
+</section>
+
+{% endblock %}

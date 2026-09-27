@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <a href="{{ url_for('admin_overview') }}" class="admin-nav-item {{ 'active' if active_tab == 'overview' }}">📊 Overview</a>
+    <a href="{{ url_for('admin_requests') }}" class="admin-nav-item {{ 'active' if active_tab == 'requests' }}">📋 Requests</a>
+    <a href="{{ url_for('admin_feedback') }}" class="admin-nav-item {{ 'active' if active_tab == 'feedback' }}">⭐ Feedback</a>
+    <a href="{{ url_for('admin_announcements') }}" class="admin-nav-item {{ 'active' if active_tab == 'announcements' }}">📢 Announcements</a>
+  </aside>
+  <div class="admin-content">
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

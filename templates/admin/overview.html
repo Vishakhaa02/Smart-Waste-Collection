@@ -1,0 +1,78 @@
+{% extends "admin/layout.html" %}
+{% block title %}Overview — CircuitBin Admin{% endblock %}
+{% block admin_content %}
+
+<div class="admin-header">
+  <h1>Overview</h1>
+  <a href="{{ url_for('admin_export_csv') }}" class="btn-secondary">Export all as CSV</a>
+</div>
+
+<section class="dash-stats">
+  <div class="stat-card"><span class="stat-num">{{ stats.total }}</span><span class="stat-label">Total requests</span></div>
+  <div class="stat-card stat-pending"><span class="stat-num">{{ stats.pending }}</span><span class="stat-label">Pending</span></div>
+  <div class="stat-card stat-scheduled"><span class="stat-num">{{ stats.scheduled }}</span><span class="stat-label">Scheduled</span></div>
+  <div class="stat-card stat-collected"><span class="stat-num">{{ stats.collected }}</span><span class="stat-label">Collected</span></div>
+  <div class="stat-card stat-cancelled"><span class="stat-num">{{ stats.cancelled }}</span><span class="stat-label">Cancelled</span></div>
+  <div class="stat-card">
+    <span class="stat-num">{% if avg_rating %}{{ avg_rating }}★{% else %}—{% endif %}</span>
+    <span class="stat-label">{% if rating_count %}{{ rating_count }} rating{{ 's' if rating_count != 1 }}{% else %}No ratings{% endif %}</span>
+  </div>
+</section>
+
+<section class="chart-row">
+  <div class="chart-card">
+    <h2>By status</h2>
+    <canvas id="statusChart" height="220"></canvas>
+  </div>
+  <div class="chart-card">
+    <h2>By category</h2>
+    <canvas id="categoryChart" height="220"></canvas>
+  </div>
+</section>
+
+<section class="activity-feed">
+  <h2>Recent activity</h2>
+  {% if recent_activity %}
+  <ul class="activity-list">
+    {% for a in recent_activity %}
+    <li>
+      <span class="status-pill status-pill-{{ a.status|lower }}">{{ a.status }}</span>
+      <span class="activity-desc">{{ a.name }} — {{ a.tracking_code }}{% if a.note %} · {{ a.note }}{% endif %}</span>
+      <span class="activity-time">{{ a.changed_at }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="empty-state">No activity yet.</p>
+  {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  const statusData = {
+    labels: ["Pending", "Scheduled", "Collected", "Cancelled"],
+    values: [{{ stats.pending }}, {{ stats.scheduled }}, {{ stats.collected }}, {{ stats.cancelled }}],
+    colors: ["#E2A33B", "#2E7D74", "#3C6E47", "#B3462C"]
+  };
+  new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: { labels: statusData.labels, datasets: [{ data: statusData.values, backgroundColor: statusData.colors, borderWidth: 0 }] },
+    options: { plugins: { legend: { position: 'bottom', labels: { font: { family: 'Work Sans' } } } } }
+  });
+
+  const categoryLabels = [{% for key, cat in categories.items() %}"{{ cat.label }}",{% endfor %}];
+  const categoryValues = [{% for key, cat in categories.items() %}{{ category_counts.get(key, 0) }},{% endfor %}];
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'bar',
+    data: { labels: categoryLabels, datasets: [{ data: categoryValues, backgroundColor: "#3C6E47" }] },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { precision: 0 } } }
+    }
+  });
+</script>
+{% endblock %}
