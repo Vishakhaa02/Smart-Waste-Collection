@@ -8,13 +8,13 @@ Built for **FITFEST2026 / GDG FIT Pune Hackathon 2026** (solo, software-only, ~4
 
 ---
 
-## 🧩 Problem
+## Problem
 
 Residents often don't know which category their waste falls into or how to request a
 pickup, and collection teams have no single place to see, prioritize, or update the
 status of incoming requests — most of it happens over phone calls with no record.
 
-## ✅ Solution
+## Solution
 
 CircuitBin gives residents a simple form to describe their waste and pickup details,
 a category guide so they choose correctly, and a tracking code so they can check
@@ -23,23 +23,23 @@ to search, filter, and update every request, with live counts by status and cate
 
 ---
 
-## ✨ Features
+## Features
 
 **Resident-facing**
 
 | Feature | Where |
 |---|---|
-| 🏠 Marketing landing page with live impact stats & how-it-works | `/` |
-| ♻️ Waste category selection with disposal guidance | `/request` |
-| 📍 Pickup location (address + optional landmark) | `/request` |
-| 📝 Pickup request submission | `/request` → generates a tracking code |
-| 📅 Preferred pickup date scheduling | `/request` |
-| 🔄 Request status tracking with a full status timeline | `/track` |
-| 📱 Look up every request tied to a phone number | `/my-requests` |
-| ⭐ Rate & comment once a pickup is collected | `/track` (after collection) |
-| ℹ️ About page with platform stats | `/about` |
-| ❓ FAQ | `/faq` |
-| 📢 Site-wide announcement banner (managed by admin) | every page |
+| Marketing landing page with live impact stats & how-it-works | `/` |
+| Waste category selection with disposal guidance | `/request` |
+| Pickup location (address + optional landmark) | `/request` |
+| Pickup request submission | `/request` → generates a tracking code |
+| Preferred pickup date scheduling | `/request` |
+| Request status tracking with a full status timeline | `/track` |
+| Look up every request tied to a phone number | `/my-requests` |
+| Rate & comment once a pickup is collected | `/track` (after collection) |
+| About page with platform stats | `/about` |
+| FAQ | `/faq` |
+| Site-wide announcement banner (managed by admin) | every page |
 
 **Admin dashboard** (password-protected, `/admin`)
 
